@@ -35,3 +35,15 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 postgres/
+
+test/
+
+.editorconfig
+.eslintrc.js
+.gitignore
+
+.git/
+
+.prettierrc
+
+README.md
