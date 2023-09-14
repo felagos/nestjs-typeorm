@@ -16,10 +16,10 @@ export class Product {
   price: number;
 
   @Column('varchar', { name: 'description', length: 250, nullable: true })
-  description: number;
+  description: string;
 
   @Column('varchar', { name: 'slug', length: 250, unique: false })
-  slug: number;
+  slug: string;
 
   @Column('int', { name: 'stock', default: 0 })
   stock: number;
@@ -28,5 +28,5 @@ export class Product {
   size: string[];
 
   @Column('varchar', { name: 'gender', length: 10 })
-  gender: number;
+  gender: string;
 }
