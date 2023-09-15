@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { CreateProductDto } from '../dto/create-product.dto';
+import { FilterProductDto } from '../dto/filter-product.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 import { ProductService } from '../services/product.service';
 
@@ -30,9 +31,9 @@ export class ProductController {
     return this.productService.findAll(pagination);
   }
 
-  @Get(':term')
-  getById(@Param('term', ParseUUIDPipe) term: string) {
-    return this.productService.getOne(term);
+  @Get('/filter')
+  filterProduct(@Query() filter: FilterProductDto) {
+    return this.productService.filterProduct(filter);
   }
 
   @Delete(':id')

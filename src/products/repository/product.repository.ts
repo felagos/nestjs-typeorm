@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { validate as isUUID } from 'uuid';
 
 import { CreateProductDto } from '../dto/create-product.dto';
+import { FilterProductDto } from '../dto/filter-product.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 import { Product } from '../entities/product.entity';
 
@@ -26,10 +28,40 @@ export class ProductRepository {
     return this.productRepository.save(newProduct);
   }
 
-  findOne(term: string) {
-    return this.productRepository.findOne({
-      where: [{ id: term }, { slug: term }],
-    });
+  filter(filter: FilterProductDto) {
+    let query = this.productRepository.createQueryBuilder();
+
+    if (isUUID(filter.term)) {
+      query = query.where('id = :id');
+      query.setParameter('id', filter.term);
+    }
+
+    query = query.orWhere('title ilike :title');
+    query.setParameter('title', `%${filter.term}%`);
+
+    if (filter.price) {
+      query = query.orWhere('price >= :price');
+      query.setParameter('price', filter.price);
+    }
+
+    if (filter.slug) {
+      query = query.orWhere('slug ilike :slug');
+      query.setParameter('slug', `%${filter.slug}%`);
+    }
+
+    if (filter.gender) {
+      query = query.orWhere('gender ilike :gender');
+      query.setParameter('gender', `%${filter.gender}%`);
+    }
+
+    if (filter.size) {
+      query = query.orWhere(':size = any(size)');
+      query.setParameter('size', filter.size);
+    }
+
+    console.log('query filter', query.getSql(), query.getParameters());
+
+    return query.getMany();
   }
 
   findAll(pagination: PaginationDto) {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { CreateProductDto } from '../dto/create-product.dto';
+import { FilterProductDto } from '../dto/filter-product.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 import { ProductRepository } from '../repository/product.repository';
 
@@ -16,8 +17,8 @@ export class ProductService {
     return this.productRepository.findAll(pagination);
   }
 
-  getOne(term: string) {
-    return this.productRepository.findOne(term);
+  filterProduct(filter: FilterProductDto) {
+    return this.productRepository.filter(filter);
   }
 
   deleteById(id: string) {
