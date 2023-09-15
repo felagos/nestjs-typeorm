@@ -13,13 +13,22 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
+    networks:
+      - product-net
     volumes:
       - ./postgres:/var/lib/postgresql/data
   server:
     container_name: product-server
-    restart: always
     build: 
       context: .
       dockerfile: Dockerfile
+    environment:
+      ENV: ${ENV}
+    ports:
+      - 3000:3000
+    networks:
+      - product-net
     depends_on:
       - db
+networks:
+  product-net:  

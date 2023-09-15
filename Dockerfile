@@ -1,6 +1,8 @@
 # Stage 1: Build the Nest.js application
 FROM node:18 AS build
 
+RUN npm install -g pnpm
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -8,16 +10,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install application dependencies
-RUN yarn
+RUN pnpm i
 
 # Copy the rest of the application source code to the container
 COPY . .
 
 # Build the Nest.js application
-RUN npm run build
+RUN pnpm build
 
 # Stage 2: Create a smaller production-ready image
-FROM node:18-alpine
+FROM node:18
 
 # Set the working directory in the container
 WORKDIR /app
@@ -26,9 +28,10 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.env ./.env
 
 # Expose the port your Nest.js app will listen on
 EXPOSE 3000
 
 # Start your Nest.js application
-CMD ["yarn", "start:prod"]
+CMD ["npm", "run", "start:prod"]
