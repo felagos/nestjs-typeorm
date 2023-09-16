@@ -29,4 +29,8 @@ export class Product {
 
   @Column('varchar', { name: 'gender', length: 10 })
   gender: string;
+
+  @Column('varchar', { array: true, default: [] })   
+  tags: string[];
+
 }
