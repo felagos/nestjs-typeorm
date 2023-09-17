@@ -8,12 +8,14 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 
 import { CreateProductDto } from '../dto/create-product.dto';
 import { FilterProductDto } from '../dto/filter-product.dto';
 import { PaginationDto } from '../dto/pagination.dto';
+import { UpdateProductDto } from '../dto/update-product.dto';
 import { ProductService } from '../services/product.service';
 
 @Controller('product')
@@ -40,5 +42,14 @@ export class ProductController {
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteById(@Param('id', ParseUUIDPipe) id: string) {
     this.productService.deleteById(id);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  updateProduct(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() product: UpdateProductDto,
+  ) {
+    this.productService.updateProduct(id, product);
   }
 }

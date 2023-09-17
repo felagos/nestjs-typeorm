@@ -3,9 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { validate as isUUID } from 'uuid';
 
+import { slugify } from '../../utils/string.util';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { FilterProductDto } from '../dto/filter-product.dto';
 import { PaginationDto } from '../dto/pagination.dto';
+import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
 
 @Injectable()
@@ -20,7 +22,7 @@ export class ProductRepository {
     newProduct.title = product.title;
     newProduct.price = product.price;
     newProduct.description = product.description;
-    newProduct.slug = product.slug;
+    newProduct.slug = slugify(product.slug);
     newProduct.stock = product.stock;
     newProduct.size = product.size;
     newProduct.gender = product.gender;
@@ -75,5 +77,16 @@ export class ProductRepository {
 
   deleteById(id: string) {
     this.productRepository.delete({ id });
+  }
+
+  async update(id: string, product: UpdateProductDto) {
+    const productUpdated = await this.productRepository.preload({
+      id,
+      ...product,
+    });
+
+    if (productUpdated) this.productRepository.save(productUpdated);
+
+    return productUpdated;
   }
 }
