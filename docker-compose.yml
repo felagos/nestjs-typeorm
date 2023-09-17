@@ -22,12 +22,17 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+      target: build
+    command: npm run start:dev
     environment:
       ENV: ${ENV}
     ports:
       - 3000:3000
     networks:
       - product-net
+    volumes:
+      - ./:/app
+      - /app/node_modules
     depends_on:
       - db
 networks:

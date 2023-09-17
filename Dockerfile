@@ -1,22 +1,21 @@
 # Stage 1: Build the Nest.js application
 FROM node:18 AS build
 
-RUN npm install -g pnpm
-
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
+
 # Install application dependencies
-RUN pnpm i
+RUN npm i
 
 # Copy the rest of the application source code to the container
 COPY . .
 
 # Build the Nest.js application
-RUN pnpm build
+RUN npm run build
 
 # Stage 2: Create a smaller production-ready image
 FROM node:18
