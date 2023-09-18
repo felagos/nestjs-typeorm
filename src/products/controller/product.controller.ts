@@ -33,6 +33,11 @@ export class ProductController {
     return this.productService.findAll(pagination);
   }
 
+  @Get(':id')
+  getOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.productService.findOne(id);
+  }
+
   @Get('/filter')
   filterProduct(@Query() filter: FilterProductDto) {
     return this.productService.filterProduct(filter);

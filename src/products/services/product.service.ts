@@ -5,13 +5,22 @@ import { FilterProductDto } from '../dto/filter-product.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { ProductRepository } from '../repository/product.repository';
+import { ProductImageRepository } from '../repository/product-image.repository';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly productImageRepository: ProductImageRepository,
+  ) {}
 
-  createProduct(product: CreateProductDto) {
-    return this.productRepository.create(product);
+  async createProduct(product: CreateProductDto) {
+    const images = await this.productImageRepository.create(product.images);
+    return this.productRepository.create(product, images);
+  }
+
+  findOne(id: string) {
+    return this.productRepository.findById(id);
   }
 
   findAll(pagination: PaginationDto) {

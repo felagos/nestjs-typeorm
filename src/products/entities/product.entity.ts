@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { ProductImage } from './product-image.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -30,7 +32,12 @@ export class Product {
   @Column('varchar', { name: 'gender', length: 10 })
   gender: string;
 
-  @Column('varchar', { array: true, default: [] })   
+  @Column('varchar', { array: true, default: [] })
   tags: string[];
 
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    cascade: false,
+    eager: true,
+  })
+  images?: ProductImage[];
 }
